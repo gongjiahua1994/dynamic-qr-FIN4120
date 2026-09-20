@@ -220,14 +220,8 @@
           return;
         }
 
-        // 3. 验证通过，跳转到问卷星 Quiz
-        iconEl.textContent = '✅';
-        titleEl.textContent = '验证通过 / Verified';
-        titleEl.className = 'success';
-        messageEl.textContent = '正在跳转到 Quiz 页面... / Redirecting to Quiz...';
-        detailEl.textContent = `（剩余有效时间 / Time left: ${(VALID_WINDOW - elapsed).toFixed(1)} 秒 / s）`;
-        // 短暂延迟让用户看到"验证通过"
-        setTimeout(() => { window.location.href = QUIZ_URL; }, 600);
+        // 3. 验证通过，立即跳转（不保留历史记录，减少暴露窗口）
+        window.location.replace(QUIZ_URL);
       } catch (e) {
         console.error(e);
         iconEl.textContent = '❌';
