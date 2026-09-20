@@ -59,6 +59,17 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .expired { color: #c62828; }
     .success { color: #2e7d32; }
+    /* iframe 全屏样式：嵌入问卷星，整个地址栏保持 GitHub Pages URL */
+    #quizFrame {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      border: none;
+      position: fixed;
+      top: 0; left: 0;
+      background: #fff;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
@@ -68,6 +79,9 @@
     <p id="message">请稍候 / Please wait</p>
     <p class="detail" id="detail"></p>
   </div>
+
+  <!-- 验证通过后，iframe 全屏显示问卷星，地址栏始终停留在 GitHub Pages -->
+  <iframe id="quizFrame" allow="camera; microphone" referrerpolicy="no-referrer"></iframe>
 
   <script>
     // ============== 配置区（必须与 index.html 保持一致） ==============
@@ -220,8 +234,12 @@
           return;
         }
 
-        // 3. 验证通过，立即跳转（不保留历史记录，减少暴露窗口）
-        window.location.replace(QUIZ_URL);
+        // 3. 验证通过 → 全屏 iframe 嵌入问卷星
+        //    学生地址栏始终停留在 GitHub Pages，不会出现微信的外部链接安全提示
+        document.querySelector('.card').style.display = 'none';
+        const frame = document.getElementById('quizFrame');
+        frame.src = QUIZ_URL;
+        frame.style.display = 'block';
       } catch (e) {
         console.error(e);
         iconEl.textContent = '❌';
